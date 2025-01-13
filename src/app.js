@@ -3,14 +3,10 @@ const app = express();
 const db = require("./config/database");
 const User = require("./models/user");
 
+app.use(express.json());
+
 app.post("/signup", async(req,res)=>{
-const user = User({
-    firstName:"Keshav",
-    lastName:"Kumar",
-    age:21,
-    email:"keshav@me.com",
-    gender:"male"
-})
+const user = User(req.body)
 try{
     await user.save();
     res.send("User info saved Successfully")
@@ -21,6 +17,19 @@ catch(err){
 
 })
 
+app.get("/user", async(req,res)=>{
+    const userEmailId = req.body.emailId;
+    try{        
+        res.send( await User.find({emailId: userEmailId}));
+    }
+    catch(err){
+        res.status(404).send("Somethig went wrong");
+    }
+})
+
+app.use("/", (err,req,res,next )=>{
+    if(err){res.status(500).send("Something is went wrong");}
+})
 
 db()
 .then(()=>{
