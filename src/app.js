@@ -2,19 +2,53 @@ const express = require ("express");
 const app = express();
 const db = require("./config/database");
 const User = require("./models/user");
+const {validationSignUpData} = require("../utils/validation");
+const bcrypt = require("bcrypt");
 
 app.use(express.json());
 
 app.post("/signup", async(req,res)=>{
-const user = User(req.body)
 try{
+    //Validation of user data or req.body
+    validationSignUpData(req);
+        
+    const {firstName, lastName, emailId, password} = req.body;
+    //Rest field ignored(Like age)
+    
+    const passwordHash = await bcrypt.hash(password,10);
+
+    const user = User({
+        firstName,
+        lastName,
+        emailId,
+        password : passwordHash
+        
+    });
+
     await user.save();
     res.send("User info saved Successfully")
 }
 catch(err){
-    res.status(400).send("Error Message : "+err.message)
+    res.status(400).send("Error : "+err.message)
 }
 
+})
+
+app.post("/login",async(req,res)=>{
+    try{
+        const {emailId, password} = req.body;
+        const user =await User.findOne({emailId : emailId});
+        if(!user){
+            throw new Error("Invalid Credentials");
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if(isPasswordValid) res.send("Login successful");
+        else throw new Error("Invalid Credentials");
+
+    }catch(err){
+        res.status(400).send("Error : "+err.message)
+    }
 })
 
 app.get("/user", async(req,res)=>{
@@ -46,21 +80,20 @@ app.patch("/user/:userId", async(req,res)=>{
     
 try{
     const data = req.body;
-    const ALLOW_UPDATE= ["about", "gender", "age", "skills","password"];
-    const isValidData = Object.keys(data).every((e)=>ALLOW_UPDATE.includes(e));
+    const ALLOW_UPDATE= ["about", "gender", "age", "skills","password","photoUrl"];
+    const isValidUpdate = Object.keys(data).every((e)=>ALLOW_UPDATE.includes(e));
 
-    if(!isValidData)throw new Error("Update not Allowed");
+    if(!isValidUpdate)throw new Error("Update not Allowed");
     if(data.skills.length>10)throw new Error("Skill should be less than 10");
 
    const user = await User.findByIdAndUpdate({_id : userId},req.body,
-    {returnDocument:"after",
+    {   returnDocument:"after",
         runValidators:true
-    }
-
-    );
+    });
    console.log(user);
    res.send("User data updated");
-}catch(err){
+}
+catch(err){
     res.status(404).send("Updated Failed : " + err.message);
 }
 
