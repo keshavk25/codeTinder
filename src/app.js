@@ -5,7 +5,8 @@ const User = require("./models/user");
 const {validationSignUpData} = require("../utils/validation");
 const bcrypt = require("bcrypt");
 const cookieParser =require("cookie-parser");
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
+const {userAuth} = require("./middleware/auth");
 
 app.use(express.json());
 app.use(cookieParser());
@@ -45,12 +46,14 @@ app.post("/login",async(req,res)=>{
             throw new Error("Invalid Credentials");
         }
 
-        const isPasswordValid = await bcrypt.compare(password, user.password);
+        const isPasswordValid =await user.validatePassword(password);
 
         if(isPasswordValid){ 
-            const token = await jwt.sign({_id:user._id},"Code@tinder");
-            res.cookie("token",token);           
-            res.send("Login successful");
+            const token =await user.getJWT();
+            res.cookie("token",token,{
+                expires:new Date(Date.now()+  1*3600000),
+            }); 
+             res.send("Login successful");
         }
         else throw new Error("Invalid Credentials");
 
@@ -59,23 +62,23 @@ app.post("/login",async(req,res)=>{
     }
 })
 
-app.get("/profile",async (req,res)=>{
+app.get("/profile",userAuth,async (req,res)=>{
     try{
-        const cookies = req.cookies;
-        const {token} = cookies;
-        if(!token){
-            throw new Error("Invalid token")
-        }
-        const decodedMessage=await jwt.verify(token,"Code@tinder");
-        const {_id} =decodedMessage;
-        const user = await User.findById(_id);
-        if(!user){
-            throw new Error("User does not exit");
-        }
+        const user = req.user;
         res.send(user); 
  
     }catch(err){ 
         res.status(404).send("ERROR : " + err.message);
+    }
+})
+
+app.post("/sendConnectionRequest",userAuth, async(req,res)=>{
+    try{
+        const user= req.user;
+        res.send(user.firstName + " sent connection request successfully");
+    }
+    catch(err){
+        res.status(404).send("User is not login");
     }
 })
 

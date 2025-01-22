@@ -1,22 +1,27 @@
-const userAuth = (req,res,next)=>{
-    console.log("user");
-    const authData = "abc";
-    if(authData === "abc"){
-        next();
-    }else{
-        res.status(401).send("Unauthorised access");
+const jwt = require("jsonwebtoken");
+const User = require("../models/user");
+
+const userAuth = async (req,res,next)=>{
+    
+  try{
+    const {token} = req.cookies;
+    if(!token){
+        throw new Error("Token is not valid");
     }
+    const decodeObj = await jwt.verify(token, "Code@tinder");
+    const {_id} = decodeObj;
+    const user = await User.findById(_id);
+    if(!user){
+        throw new Error("User does not exit");
+   }
+   req.user = user;
+   next();
+}catch(err){
+    res.status(404).send("ERROR : " + err.message);
 }
 
-const adminAuth = (req,res,next)=>{
-    console.log("admin");
-    const authData = "ab2c";
-    if(authData === "abc"){
-        next();
-    }else{
-        console.log("unauthorised admin");
-        res.status(401).send("admin Unauthorised access");
-    }
+
 }
 
-module.exports = {userAuth,adminAuth}
+
+module.exports = {userAuth}
