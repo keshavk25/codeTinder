@@ -28,14 +28,4 @@ const validateEditProfile = (req)=>{
     return isEditAllowed;
 }
 
-const validateForgetPassword = (req)=>{
-    const user = req.body;
-    const allowedForgetPassword = [
-        "oldPassword",
-        "newPassword"
-    ]
-   const isForgetPasswordAllowed=  Object.keys(req.body).every(fields=>allowedForgetPassword.includes(fields));
-   return isForgetPasswordAllowed;
-}
-
-module.exports = {validationSignUpData,validateEditProfile,validateForgetPassword};
+module.exports = {validationSignUpData,validateEditProfile};
