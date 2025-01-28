@@ -1,7 +1,8 @@
 const express = require("express");
 const {userAuth} = require("../middleware/auth");
 const ConnectionRequest = require("../models/connectionRequest");
-const User  = require("../models/user");;
+const User  = require("../models/user");const connectionRequest = require("../models/connectionRequest");
+;
 
 
 const requestRouter = express.Router();
@@ -49,6 +50,36 @@ requestRouter.post("/request/send/:status/:toUserId",userAuth, async(req,res)=>{
     }
     catch(err){
         res.status(404).json({message: err.message});
+    }
+})
+
+requestRouter.post("/request/review/:status/:requestId", userAuth, async (req,res)=>{
+try{
+    const requestId = req.params.requestId;
+    const loggedInUser = req.user;
+    const status = req.params.status;
+
+    if(!(["accepted", "rejected"].includes(status))){
+       return res.status(404).json({message: "Status not allowed"});
+    }
+    const connectionRequest = await ConnectionRequest.findOne({
+        _id:requestId,
+        toUserId : loggedInUser._id,
+        status : "interested"
+    })
+
+    if(!connectionRequest){
+        return res.status(404).json({message: "Connection request not found"})
+    }
+
+    connectionRequest.status = status;
+    await connectionRequest.save();
+    res.json({message: `Request ${status}`}
+    );}
+    catch(err){
+        res.status(404).json({
+            message:err.message
+        })
     }
 })
 
