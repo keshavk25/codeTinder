@@ -47,7 +47,7 @@ const userSchema = new mongoose.Schema({
     },
     photoUrl:{
         type:String,
-        default:"https://media.licdn.com/dms/image/v2/D5603AQH1GKj8LPKVOg/profile-displayphoto-shrink_800_800/B56ZP9OaOCH0Ag-/0/1735120234897?e=1743033600&v=beta&t=kGuSndku4v64V9XxdajL0LdWMhKRM5mFUnnV07NEXuA",
+        default:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToK_-LT9HmxfBNTsC0A8wfvjtfxKh3GjexbQ&s",
         validate(value){
             if(!validator.isURL(value)){
                 throw new Error(value + " is not a Valid Url");

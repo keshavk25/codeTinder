@@ -4,7 +4,7 @@ const ConnectionRequest  = require("../models/connectionRequest");
 const userRouter = express.Router();
 const User = require("../models/user")
 
-const REQUEST_USER_DATA = "firstName lastName age gender skills";
+const REQUEST_USER_DATA = "firstName lastName age gender skills about photoUrl ";
 
 userRouter.get("/user/requests/received", userAuth, async(req, res)=>{
 try{
@@ -97,7 +97,7 @@ userRouter.get("/feed", userAuth, async(req,res)=>{
         const connectionRequest =await ConnectionRequest.find({
             $or:[{fromUserId:loggedInUser._id},
                 {toUserId:loggedInUser._id}]
-        }).select("fromUserId toUserId")
+        }).select("fromUserId toUserId ")
 
         const hideUserFromFeed = new Set();
         connectionRequest.forEach((row)=>{
@@ -105,7 +105,7 @@ userRouter.get("/feed", userAuth, async(req,res)=>{
             hideUserFromFeed.add(row.toUserId.toString());
         })
 
-        const feedUser = await User.find({
+        const data = await User.find({
            $and:[
             { _id : {$nin: Array.from(hideUserFromFeed)}},
             {_id : {$ne: loggedInUser._id }}
@@ -113,11 +113,10 @@ userRouter.get("/feed", userAuth, async(req,res)=>{
         }).select(REQUEST_USER_DATA)
         .skip(skip)
         .limit(limit);
-
-
+        
         res.json({ 
             message : "Feed Users : ",
-            feedUser
+            data
         })
 
     }catch(err){
