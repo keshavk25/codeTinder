@@ -16,7 +16,7 @@ try{
     })
     .populate("fromUserId",REQUEST_USER_DATA);
     res.json({message:"Data fetched successfully",
-        Data : connectionRequest
+        data : connectionRequest
     });
 
 }catch(err){
@@ -46,7 +46,7 @@ try{
     })
     res.json({
         message:"All Connections : " , 
-        Data :data
+        data :data
     })
 }catch(err){
     res.status(404).json({message: err.message});
