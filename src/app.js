@@ -27,7 +27,7 @@ db()
 .then(()=>{
     console.log("db connection is successful");
     app.listen(process.env.PORT,()=>{
-        console.log("server running on port 3000");
+        console.log("server running on port "+ process.env.PORT);
         
     });
 })
