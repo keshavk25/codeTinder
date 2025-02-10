@@ -8,6 +8,7 @@ const {profileRouter} = require("./routes/profile");
 const {requestRouter} = require("./routes/request");
 const {userRouter} = require("./routes/user");
 const cors = require("cors");
+require('dotenv').config()
 
 app.use(cors({
     origin: 'http://localhost:5173',
@@ -25,7 +26,7 @@ app.use("/",userRouter);
 db()
 .then(()=>{
     console.log("db connection is successful");
-    app.listen(3000,()=>{
+    app.listen(process.env.PORT,()=>{
         console.log("server running on port 3000");
         
     });
