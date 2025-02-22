@@ -54,6 +54,34 @@ try{
 
 } )
 
+userRouter.get("/user/connection/:withUserId", userAuth ,async (req,res)=>{
+
+    try{
+        const withUserId = req.params.withUserId;
+        const loggedInUser =req.user;
+    
+        let data = await ConnectionRequest.findOne({
+            $or:[{fromUserId : loggedInUser._id,status: "accepted", toUserId : withUserId},
+                {toUserId : withUserId,toUserId: loggedInUser._id,status: "accepted"}
+            ]
+        }).populate("fromUserId",REQUEST_USER_DATA)
+        .populate("toUserId",REQUEST_USER_DATA);
+    
+        if(data.fromUserId._id.toString() === loggedInUser._id.toString()){
+            data =  data.toUserId;
+        }
+        else{ data = data.fromUserId};
+        
+        res.json({
+            message:"User Find : " , 
+            data :data
+        })
+    }catch(err){
+        res.status(404).json({message: err.message});
+    }
+    
+    } )
+
 userRouter.get("/user/request/send/review/:status/", userAuth, async (req,res)=>{
     try{
         const loggedInUser = req.user;

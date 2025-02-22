@@ -2,13 +2,17 @@ const express = require ("express");
 const app = express();
 const db = require("./config/database");
 const cookieParser =require("cookie-parser");
+const http = require("http");
 
 const {authRouter} = require("./routes/auth");
 const {profileRouter} = require("./routes/profile");
 const {requestRouter} = require("./routes/request");
 const {userRouter} = require("./routes/user");
+const chatRouter = require("./routes/chat");
+
 const cors = require("cors");
-require('dotenv').config()
+const initializeSocket  = require("./utils/socket");
+require('dotenv').config();
 
 app.use(cors({
     origin: 'http://localhost:5173',
@@ -22,11 +26,15 @@ app.use("/",authRouter);
 app.use("/",profileRouter);
 app.use("/",requestRouter);
 app.use("/",userRouter);
+app.use("/",chatRouter);
+
+const server = http.createServer(app);
+initializeSocket(server);
 
 db()
 .then(()=>{
     console.log("db connection is successful");
-    app.listen(process.env.PORT,()=>{
+    server.listen(process.env.PORT,()=>{
         console.log("server running on port "+ process.env.PORT);
         
     });
