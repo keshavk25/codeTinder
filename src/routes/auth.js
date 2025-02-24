@@ -14,7 +14,7 @@ authRouter.post("/signup", async(req,res)=>{
         //Rest field ignored(Like age)
             
         const passwordHash = await bcrypt.hash(password,10);
-    
+
         const user = User({
             firstName,
             lastName,
