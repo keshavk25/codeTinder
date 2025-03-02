@@ -60,6 +60,13 @@ const userSchema = new mongoose.Schema({
     about:{
         type: String,
         default: "This is default value"
+    },
+    isPremium:{
+        type:Boolean,
+        default: false,
+    },
+    membershipType:{
+        type:String, 
     }
 },
 {
