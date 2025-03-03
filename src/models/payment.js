@@ -12,6 +12,7 @@ paymentId:{
 },
 orderId:{
     type:String,
+    requied:true,
 },
 status:{
     type:String,
@@ -41,9 +42,6 @@ notes:{
        type: String
     },
 }
-
-
-
 },
 {
     timestamps:true
