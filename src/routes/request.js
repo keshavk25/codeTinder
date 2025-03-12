@@ -2,9 +2,7 @@ const express = require("express");
 const {userAuth} = require("../middleware/auth");
 const ConnectionRequest = require("../models/connectionRequest");
 const User  = require("../models/user");
-const connectionRequest = require("../models/connectionRequest");
-;
-
+const sendEmail = require("../utils/sendEmail");
 
 const requestRouter = express.Router();
 
@@ -44,14 +42,19 @@ requestRouter.post("/request/send/:status/:toUserId",userAuth, async(req,res)=>{
             toUserId,
             status,
         })
-        const data = await connection.save();        
+        const data = await connection.save();   
+        
+        const emailRes = await sendEmail.run("A new request is send from "+req.user.firstName ,`${req.user.firstName} ${(status==="interested")?"is interested in ": "ignored "} ${toUser.firstName} profile`);
+        
+        console.log(emailRes);
+          
         res.json({message : `${req.user.firstName} is ${status} ${toUser.firstName} profile`,
             data
-        });
+        }); 
     }
     catch(err){
         res.status(404).json({message: err.message});
-    }
+    } 
 })
 
 requestRouter.post("/request/review/:status/:requestId", userAuth, async (req,res)=>{
