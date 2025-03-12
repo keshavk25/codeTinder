@@ -1,4 +1,4 @@
-# CodeTinder APIs
+# DevCircle APIs
 
 ## authRouter
 
@@ -8,7 +8,7 @@
 
 ## profileRouter
 - GET /profile/view
-- PACTH /profile/edit
+- PATCH /profile/edit
 - PATCH / profile/edit/password
 
 ## connectionRequestRouter
