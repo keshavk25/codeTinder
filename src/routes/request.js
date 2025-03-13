@@ -44,7 +44,10 @@ requestRouter.post("/request/send/:status/:toUserId",userAuth, async(req,res)=>{
         })
         const data = await connection.save();   
         
-        const emailRes = await sendEmail.run("A new request is send from "+req.user.firstName ,`${req.user.firstName} ${(status==="interested")?"is interested in ": "ignored "} ${toUser.firstName} profile`);
+        const emailRes = await sendEmail.run("A new request is send from "+req.user.firstName ,
+            `${req.user.firstName} ${(status==="interested")?" Interested in ": "Ignored "} ${toUser.firstName} profile`,
+           
+        );
         
         console.log(emailRes);
           

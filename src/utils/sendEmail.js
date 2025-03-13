@@ -19,7 +19,8 @@ const createSendEmailCommand = (toAddress, fromAddress,subject,body) => {
           /* required */
           Html: {
             Charset: "UTF-8",
-            Data: `<h1>${body}</h1>`,
+            Data: `<h1>${body}</h1>
+            For More visit : https://devcircle.site`,
           },
           Text: {
             Charset: "UTF-8",
