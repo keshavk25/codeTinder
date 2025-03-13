@@ -14,14 +14,13 @@ const initializeSocket = (server) => {
         cors:{
             origin: 'http://localhost:5173'
         },
-    })
+    }) 
 
     io.on("connection",(socket)=>{
         socket.on("joinChat",({firstName,lastName,userId, targetUserId})=>{
             const roomId = getSecretRoomId(userId,targetUserId);
-            console.log(firstName+" "+ lastName  + " Joined the Room :" +roomId);
             socket.join(roomId);
-        })
+        }) 
         socket.on("sendMessage",async ({firstName,lastName,userId, targetUserId,text})=>{
             try{
        const roomId =  getSecretRoomId(userId,targetUserId);

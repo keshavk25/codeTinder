@@ -3,4 +3,4 @@ const membershipAmount = {
     gold : 500
 }
 
-module.exports = {membershipAmount}
+module.exports = {membershipAmount} 
