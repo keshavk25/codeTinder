@@ -10,6 +10,7 @@ const {requestRouter} = require("./routes/request");
 const {userRouter} = require("./routes/user");
 const {chatRouter} = require("./routes/chat");
 const {paymentRouter} = require("./routes/payment");
+const {passwordRouter} = require("./routes/password");
 
 const cors = require("cors");
 const initializeSocket  = require("./utils/socket");
@@ -29,6 +30,7 @@ app.use("/",requestRouter);
 app.use("/",userRouter);
 app.use("/",chatRouter);
 app.use("/",paymentRouter);
+app.use("/",passwordRouter);
 
 const server = http.createServer(app);
 initializeSocket(server);

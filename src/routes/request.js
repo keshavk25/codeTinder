@@ -42,15 +42,14 @@ requestRouter.post("/request/send/:status/:toUserId",userAuth, async(req,res)=>{
             toUserId,
             status,
         })
-        const data = await connection.save();   
-        
-        const emailRes = await sendEmail.run("A new request is send from "+req.user.firstName ,
-            `${req.user.firstName} ${(status==="interested")?" Interested in ": "Ignored "} ${toUser.firstName} profile`,
+        const data = await connection.save();  
+
+        if(status==="interested"){
+        await sendEmail.run("New Connection Request " ,
+            `<h1>${req.user.firstName} has expressed interest in Your profile</h1>`,
+            toUser.emailId,
+        )}
            
-        );
-        
-        console.log(emailRes);
-          
         res.json({message : `${req.user.firstName} is ${status} ${toUser.firstName} profile`,
             data
         }); 
