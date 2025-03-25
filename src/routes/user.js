@@ -62,7 +62,7 @@ userRouter.get("/user/connection/:withUserId", userAuth ,async (req,res)=>{
     
         let data = await ConnectionRequest.findOne({
             $or:[{fromUserId : loggedInUser._id,status: "accepted", toUserId : withUserId},
-                {toUserId : withUserId,toUserId: loggedInUser._id,status: "accepted"}
+                {fromUserId : withUserId,toUserId: loggedInUser._id,status: "accepted"}
             ]
         }).populate("fromUserId",REQUEST_USER_DATA)
         .populate("toUserId",REQUEST_USER_DATA);
