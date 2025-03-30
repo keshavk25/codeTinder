@@ -20,8 +20,8 @@ const createSendEmailCommand = (toAddress, fromAddress,subject,body,ccAddresses)
           /* required */
           Html: {
             Charset: "UTF-8",
-            Data: `${body }
-            For More visit : https://devcircle.site`,
+            Data: ` ${body }
+            <h5>For More visit : https://devcircle.site</h5>`,
           },
           Text: {
             Charset: "UTF-8",

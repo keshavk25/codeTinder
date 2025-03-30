@@ -74,12 +74,25 @@ try{
         status : "interested"
     })
 
+    const fromUser = await connectionRequest.populate("fromUserId");
+    const toUser = await connectionRequest.populate("toUserId");
+
     if(!connectionRequest){
         return res.status(404).json({message: "Connection request not found"})
     }
 
     connectionRequest.status = status;
     await connectionRequest.save();
+    console.log(fromUser);
+    
+    if(status === "accepted"){
+        await sendEmail.run("New Connection",
+           `<h4>Hi, ${fromUser.fromUserId.firstName}🙂 </h4>
+            <h1>${toUser.toUserId.firstName} accept your connection request</h1>`,
+            fromUser.fromUserId.emailId
+        )
+    }
+
     res.json({message: `Request ${status}`}
     );}
     catch(err){
