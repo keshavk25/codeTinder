@@ -2,6 +2,7 @@ const express = require("express");
 const User = require("../models/user");
 const {validationSignUpData} = require("../utils/validation");
 const bcrypt = require("bcrypt");
+const sendEmail = require("../utils/sendEmail");
 
 const authRouter = express.Router();
 
@@ -24,6 +25,21 @@ authRouter.post("/signup", async(req,res)=>{
         });
     
         const savedUser = await user.save();
+
+        await sendEmail.run("🚀 Welcome to DevCircle – Let’s Build Together!",
+            `<h2>Hi ${firstName},</h2>
+
+            <p>Welcome to DevCircle.site! We’re excited to have you on board. 🚀</p>
+
+            <p>DevCircle is your space to learn, collaborate, and grow with fellow developers. Start exploring, connect with peers, and build something amazing!</p>
+
+            <h3 >For any help, reach out:
+            📩 Email: support@devcircle.site</h3>
+
+            Happy coding! 💙
+            – The DevCircle Team`,
+            emailId
+        )
 
         const token =await savedUser.getJWT();
                 res.cookie("token",token,{
