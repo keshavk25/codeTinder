@@ -19,7 +19,7 @@ authRouter.post("/signup", async(req,res)=>{
         const user = User({
             firstName, 
             lastName,
-            emailId,
+            emailId : emailId.toLowerCase(),
             password : passwordHash
             
         });
