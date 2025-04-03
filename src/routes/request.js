@@ -46,7 +46,8 @@ requestRouter.post("/request/send/:status/:toUserId",userAuth, async(req,res)=>{
 
         if(status==="interested"){
         await sendEmail.run("New Connection Request " ,
-            `<h1>${req.user.firstName} has expressed interest in Your profile</h1>`,
+            `<h1>${req.user.firstName} has expressed interest in Your profile</h1>
+            Visit DevCircle to accept the request`,
             toUser.emailId,
         )}
            

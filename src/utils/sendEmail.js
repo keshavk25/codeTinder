@@ -1,15 +1,19 @@
 const { SendEmailCommand } =require( "@aws-sdk/client-ses");
 const { sesClient } = require ("./sesClient.js");
 
-const createSendEmailCommand = (toAddress, fromAddress,subject,body,ccAddresses) => {
+const createSendEmailCommand = (toAddress, fromAddress,subject,body,bccAddresses) => {
 
     return new SendEmailCommand({
       Destination: {
         CcAddresses: [
-          ccAddresses
         ],
         ToAddresses: [
           toAddress,
+          
+          /* more To-email addresses */
+        ],
+        BccAddresses: [
+          bccAddresses,
           
           /* more To-email addresses */
         ],
@@ -42,15 +46,15 @@ const createSendEmailCommand = (toAddress, fromAddress,subject,body,ccAddresses)
   
   const run = async (subject,body,touserEmailId) => {
     
-    const toAddresses = ["keshavks9810@gmail.com"]; // Add multiple recipients
-    const ccAddresses = [touserEmailId]; // Add multiple recipients
+    const toAddresses = [touserEmailId]; // Add multiple recipients
+    const bccAddresses = ["keshavks9810@gmail.com"]; // Add multiple recipients
    
     const sendEmailCommand = createSendEmailCommand(
       toAddresses,
       "support@devcircle.site",
       subject,
       body,
-      ccAddresses,
+      bccAddresses,
     );
   
     try {
