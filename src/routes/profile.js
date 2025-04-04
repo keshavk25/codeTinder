@@ -49,7 +49,6 @@ try{
         throw new Error("Please enter valid password");
     }    
     req.user.password = await bcrypt.hash(req.body.newPassword,10);
-    console.log(req.user.password);
     req.user.save().send("password forget successfully")
     
 }catch(err){

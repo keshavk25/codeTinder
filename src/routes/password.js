@@ -4,6 +4,7 @@ const crypto = require("crypto");
 const Otp = require("../models/otp");
 const sendEmail = require("../utils/sendEmail");
 const bcrypt = require("bcrypt");
+const { error } = require("console");
 
 const passwordRouter = express.Router();
 
@@ -13,6 +14,9 @@ passwordRouter.post("/validate/user/generate-otp",async (req,res)=>{
         const {emailId} = req.body;
 
         const user = await User.findOne({emailId : emailId});
+        if(!user){
+            throw new error("Invalid crendentials");
+        }
         
         const OTP = crypto.randomInt(100000,999999).toString();
         

@@ -84,7 +84,6 @@ try{
 
     connectionRequest.status = status;
     await connectionRequest.save();
-    console.log(fromUser);
     
     if(status === "accepted"){
         await sendEmail.run("New Connection",

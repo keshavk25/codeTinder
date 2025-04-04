@@ -37,6 +37,8 @@ paymentRouter.post("/payment/create",userAuth,async(req,res)=>{
         const savedPayment = await payment.save();
         // res.send(order);
         res.json({ ...savedPayment.toJSON(), keyId: process.env.RAZORPAY_KEY_ID});
+        console.log("payment created");
+        
     }
     catch(err){
         console.log(err);
@@ -83,11 +85,14 @@ paymentRouter.post("/payment/webhook",async(req,res)=>{
 
     }catch(err){
         console.log(err);
+        return res.status(500).json({ msg: err.message });  
     }
 })
 
 paymentRouter.get("/premium/verify", userAuth, async(req,res)=>{
     try{
+        console.log("success");
+        
         const user = req.user.toJSON();
         if(user.isPremium){
             return res.json({...user});
