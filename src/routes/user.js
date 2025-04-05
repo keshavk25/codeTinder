@@ -139,8 +139,8 @@ userRouter.get("/feed", userAuth, async(req,res)=>{
             {_id : {$ne: loggedInUser._id }}
            ]
         }).select(REQUEST_USER_DATA)
-        .skip(skip)
-        .limit(limit);
+        // .skip(skip)
+        // .limit(limit);
         
         res.json({ 
             message : "Feed Users : ",
