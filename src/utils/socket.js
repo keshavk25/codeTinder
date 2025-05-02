@@ -48,6 +48,16 @@ const initializeSocket = (server) => {
             console.log(error);
         }  
         })
+
+        //Same room
+        socket.on("joinEditorRoom", (roomId)=>{
+            socket.join(roomId);
+        })
+
+        socket.on("codeChange", ({roomId, code})=>{
+            socket.to(roomId).emit("codeChange", code);
+        })
+
         socket.on("disconnect",()=>{})
     })
 
