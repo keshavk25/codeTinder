@@ -1,3 +1,6 @@
 node_modules
 doc.md
 .env
+post.js
+posts.js
+s3.js

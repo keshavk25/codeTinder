@@ -1,6 +1,7 @@
 const socket  = require("socket.io");
 const crypto = require("crypto");
 const { Chat } = require("../models/chat");
+const editorSocket = require("./editorSocket")
 
 const getSecretRoomId= (userId,targetUserId)=>{
     return crypto.createHash("sha256")
@@ -23,7 +24,7 @@ const initializeSocket = (server) => {
         }) 
         socket.on("sendMessage",async ({firstName,lastName,userId, targetUserId,text})=>{
             try{
-       const roomId =  getSecretRoomId(userId,targetUserId);;
+            const roomId =  getSecretRoomId(userId,targetUserId);;
 
           let chat = await Chat.findOne({
               participants :{$all:[userId, targetUserId]}
@@ -49,8 +50,10 @@ const initializeSocket = (server) => {
         }  
         })
 
+        editorSocket(io,socket);
         socket.on("disconnect",()=>{})
     })
+
 
 }
 
