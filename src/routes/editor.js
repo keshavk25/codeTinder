@@ -25,7 +25,7 @@ editorRouter.get("/editor/join/:roomId",userAuth,async(req,res)=>{
     }
 })
 
-editorRouter.get("/editor/create/:roomId",userAuth,async(req,res)=>{
+editorRouter.post("/editor/create/:roomId",userAuth,async(req,res)=>{
     try{
         const {roomId} = req.params;
 
@@ -33,14 +33,14 @@ editorRouter.get("/editor/create/:roomId",userAuth,async(req,res)=>{
             return res.status(400).json({message: "Invalid room ID format"});
         }
 
-        let editorData = await Editor.findOne({roomId: roomId});
+        let editorData = await Editor.findOne({roomId});
         if(editorData){
-            return res.status(400).json({error: "something went wrong"});
+            return res.status(400).json({message: "something went wrong"});
         }
-        
+
         if(!editorData){
-           editorData = new Editor({roomId:roomId,text:""});
-           await editorData.save();
+            editorData = new Editor({roomId:roomId,text:""});
+            await editorData.save();
         }
 
         res.status(200).json({message: editorData});
