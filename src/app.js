@@ -33,7 +33,6 @@ app.use("/",chatRouter);
 app.use("/",paymentRouter);
 app.use("/",passwordRouter);
 app.use("/",editorRouter);
-app.use("/api",editorRouter);
 
 const server = http.createServer(app);
 initializeSocket(server);
