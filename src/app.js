@@ -42,11 +42,9 @@ db()
     console.log("db connection is successful");
     server.listen(process.env.PORT,()=>{
         console.log("server running on port "+ process.env.PORT);
-        
     });
 })
 .catch((err)=>{
-    console.error("database connection error")
-    
+    console.error("database connection error");
 })
 

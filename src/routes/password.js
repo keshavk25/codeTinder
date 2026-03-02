@@ -2,7 +2,7 @@ const express = require("express");
 const User = require("../models/user");
 const crypto = require("crypto");
 const Otp = require("../models/otp");
-const sendEmail = require("../utils/sendEmail");
+const sendEmail = require("../services/email.service");
 const bcrypt = require("bcrypt");
 const { error } = require("console");
 
@@ -22,9 +22,9 @@ passwordRouter.post("/validate/user/generate-otp",async (req,res)=>{
         
         await Otp.findOneAndUpdate({userEmailId : emailId},{otp :OTP,createdAt : new Date()},{upsert:true});
 
-        await sendEmail.run("Request for reset password",
+        await sendEmail(emailId,"Request for reset password",
             `This mail is from DevCircle . OTP for reset your password is : <strong><i>${OTP}<i></strong>`,
-            emailId
+            
         )
 
         res.json({message : "OTP sent successfully",

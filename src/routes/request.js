@@ -2,7 +2,7 @@ const express = require("express");
 const {userAuth} = require("../middleware/auth");
 const ConnectionRequest = require("../models/connectionRequest");
 const User  = require("../models/user");
-const sendEmail = require("../utils/sendEmail");
+const sendEmail = require("../services/email.service");
 
 const requestRouter = express.Router();
 
@@ -45,10 +45,10 @@ requestRouter.post("/request/send/:status/:toUserId",userAuth, async(req,res)=>{
         const data = await connection.save();  
 
         if(status==="interested"){
-        await sendEmail.run("New Connection Request " ,
-            `<h1>${req.user.firstName} has expressed interest in Your profile</h1>
+        await sendEmail(toUser.emailId,"New Connection Request " ,
+            `${req.user.firstName} has expressed interest in Your profile
             Visit DevCircle to accept the request`,
-            toUser.emailId,
+            
         )}
            
         res.json({message : `${req.user.firstName} is ${status} ${toUser.firstName} profile`,
@@ -86,10 +86,9 @@ try{
     await connectionRequest.save();
     
     if(status === "accepted"){
-        await sendEmail.run("New Connection",
-           `<h4>Hi, ${fromUser.fromUserId.firstName}🙂 </h4>
-            <h1>${toUser.toUserId.firstName} accept your connection request</h1>`,
-            fromUser.fromUserId.emailId
+        await sendEmail(fromUser.fromUserId.emailId,"New Connection",
+           `Hi, ${fromUser.fromUserId.firstName}🙂
+            ${toUser.toUserId.firstName} accept your connection request`,
         )
     }
 
